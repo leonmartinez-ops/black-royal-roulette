@@ -1,4 +1,8 @@
 /* Final mobile overrides: neutralize the legacy 43px roulette-button height. */
+.signal {
+  color: #20b875 !important;
+}
+
 .number-grid .number,
 .number-grid .number span {
   min-width: 0 !important;
