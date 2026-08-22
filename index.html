@@ -8,6 +8,7 @@
   <title>BLACK ROYAL ROULETTE</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="board.css">
+  <link rel="stylesheet" href="luxe.css">
 </head>
 <body>
   <div id="typeGate" class="gate">
@@ -22,38 +23,31 @@
   <div id="app" class="app hidden">
     <header>
       <button id="menuBtn" class="icon-btn" aria-label="Abrir menú">☰</button>
-      <div><strong>BLACK ROYAL</strong><span>ROULETTE / <b id="rouletteLabel"></b></span></div>
+      <div><strong>BLACK ROYAL</strong><span>ROULETTE · <b id="rouletteLabel"></b> · <i id="mathProbability"></i></span></div>
       <button id="changeTypeBtn" class="type-pill">CAMBIAR</button>
     </header>
 
     <main>
       <section id="live" class="view active">
-        <div class="warning"><b>BR SCORE ≠ PROBABILIDAD REAL</b><span id="mathProbability"></span></div>
-        <p class="eyebrow">ROYAL INTELLIGENCE SYSTEM — ROULETTE</p>
         <div class="signal-card">
-          <div class="signal-head"><h2>BR SIGNAL <em>DEMO</em></h2><span id="confidence">SIN DATOS</span></div>
+          <div class="signal-head"><h2>BR SIGNAL</h2><span id="confidence">SIN DATOS</span></div>
           <div id="signals" class="signals"></div>
           <p id="signalNote">Importa resultados reales para activar la demostración estadística.</p>
         </div>
 
-        <div class="section-title"><div><p class="eyebrow">CILINDRO</p><h2>SELECCIONA HASTA 3 CENTROS</h2></div><button id="clearCenters">LIMPIAR</button></div>
-        <div class="neighbor-control">
-          <span>VECINOS</span><div id="neighborOptions"></div>
-        </div>
+        <div class="track-toolbar"><span>SELECCIONA HASTA 3 CENTROS</span><button id="clearCenters">LIMPIAR</button></div>
         <div id="racetrack" class="roulette-layout" aria-label="Tapete y pista interactiva"></div>
-        <div class="coverage-stats">
-          <div><b id="centerCount">0</b><span>CENTROS</span></div>
-          <div><b id="coveredCount">0</b><span>NÚMEROS CUBIERTOS</span></div>
-          <div><b id="coveragePct">0%</b><span>COBERTURA</span></div>
+        <div class="neighbor-control">
+          <div id="neighborOptions"></div>
         </div>
 
         <div class="result-card">
-          <p class="eyebrow">REGISTRAR SIGUIENTE GIRO</p>
-          <div class="result-row"><input id="resultInput" inputmode="numeric" placeholder="RESULTADO" maxlength="2"><button id="lockBtn">INICIAR GIRO</button></div>
-          <p id="roundStatus">Selecciona centros y congela la señal antes de registrar el resultado.</p>
+          <p class="eyebrow">NUEVO RESULTADO</p>
+          <div class="result-row"><input id="resultInput" inputmode="numeric" placeholder="0–36" maxlength="2"><button id="lockBtn">REGISTRAR</button></div>
+          <p id="roundStatus">El resultado se guardará y comprobará la cobertura.</p>
         </div>
 
-        <div class="recent-wrap"><div class="section-title"><h2>RECIENTES</h2><button data-go="history">VER HISTÓRICO</button></div><div id="recentResults" class="recent"></div></div>
+        <div class="recent-wrap"><div class="section-title"><h2>HISTORIAL RECIENTE</h2><button data-go="history">VER TODO</button></div><div id="recentResults" class="recent"></div></div>
       </section>
 
       <section id="history" class="view">
