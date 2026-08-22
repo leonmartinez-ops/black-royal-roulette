@@ -1,0 +1,55 @@
+/* Final mobile overrides: neutralize the legacy 43px roulette-button height. */
+.number-grid .number,
+.number-grid .number span {
+  min-width: 0 !important;
+  min-height: 0 !important;
+  width: 100% !important;
+  height: 24px !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  overflow: hidden !important;
+}
+
+.number-grid .number {
+  display: grid !important;
+  place-items: center !important;
+  font-size: 13px !important;
+}
+
+.number-grid .number span {
+  display: grid !important;
+  place-items: center !important;
+}
+
+.zero-key,
+.zero-key .number,
+.zero-key .number span {
+  height: 30px !important;
+}
+
+.result-row input {
+  min-height: 34px !important;
+  height: 34px !important;
+  font-size: 16px !important;
+}
+
+.result-row button {
+  height: 34px !important;
+}
+
+@media (max-height: 720px) {
+  .table-keys {
+    grid-template-rows: repeat(12, 21px) !important;
+  }
+
+  .number-grid .number,
+  .number-grid .number span {
+    height: 21px !important;
+  }
+
+  .zero-key,
+  .zero-key .number,
+  .zero-key .number span {
+    height: 26px !important;
+  }
+}
