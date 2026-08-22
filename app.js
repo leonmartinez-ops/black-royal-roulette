@@ -17,7 +17,7 @@ function enter(t){type=t;localStorage.setItem('brr.type',t);$('#typeGate').class
 function renderAll(){
  $('#rouletteLabel').textContent=type==='american'?'AMERICANA':'EUROPEA';
  $('#mathProbability').textContent=`1 número: ${(100/WHEELS[type].length).toFixed(2)}%`;
- renderNeighbors();renderTrack();renderHistory();renderSignal();renderStats();renderRound();
+ renderTrack();renderHistory();renderSignal();renderStats();renderRound();
 }
 function renderNeighbors(){const el=$('#neighborOptions');el.innerHTML=[0,1,2,3,4].map(n=>`<button class="${n===neighbors?'active':''}" data-n="${n}">${n?'±'+n:'SOLO'}</button>`).join('');el.querySelectorAll('button').forEach(b=>b.onclick=()=>{if(locked)return;neighbors=+b.dataset.n;renderNeighbors();renderTrack()})}
 function numberButton(n){const cov=covered();return `<button class="number ${color(n)} ${cov.has(n)?'covered':''} ${centers.includes(n)?'center':''}" data-number="${n}"><span>${n}</span></button>`}
