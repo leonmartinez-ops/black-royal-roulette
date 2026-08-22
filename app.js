@@ -8,7 +8,13 @@ let store=load(),type=null,centers=[],neighbors=3,locked=null,historyLimit=50;
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||base()}catch{return base()}}
 function base(){return{european:{results:[],rounds:[]},american:{results:[],rounds:[]}}}
 function save(){localStorage.setItem(KEY,JSON.stringify(store))}
-if(!store.european.results.length&&Array.isArray(window.BR_DEMO_EUROPEAN_500)&&window.BR_DEMO_EUROPEAN_500.length===500){store.european.results=[...window.BR_DEMO_EUROPEAN_500];save()}
+if(Array.isArray(window.BR_DEMO_EUROPEAN_500)){
+  const demo=window.BR_DEMO_EUROPEAN_500;
+  if(!store.european.results.length){store.european.results=[...demo];save()}
+  else if(store.european.results.length===500&&demo.length===520&&store.european.results.every((n,i)=>n===demo[i])){
+    store.european.results.push(...demo.slice(500));save()
+  }
+}
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 function color(n){return n==='0'||n==='00'?'green':RED.has(n)?'red':'black'}
 function valid(n,t=type){return WHEELS[t].includes(String(n))}
