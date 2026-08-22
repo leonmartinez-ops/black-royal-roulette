@@ -20,15 +20,12 @@ function renderAll(){
 }
 function renderNeighbors(){const el=$('#neighborOptions');el.innerHTML=[0,1,2,3,4].map(n=>`<button class="${n===neighbors?'active':''}" data-n="${n}">${n?'±'+n:'SOLO'}</button>`).join('');el.querySelectorAll('button').forEach(b=>b.onclick=()=>{if(locked)return;neighbors=+b.dataset.n;renderNeighbors();renderTrack()})}
 function numberButton(n){const cov=covered();return `<button class="number ${color(n)} ${cov.has(n)?'covered':''} ${centers.includes(n)?'center':''}" data-number="${n}"><span>${n}</span></button>`}
-function capsulePoint(index,total){
- const radius=42,topY=46,bottomY=166,straight=bottomY-topY,arc=Math.PI*radius,perimeter=arc*2+straight*2;
- let s=index*perimeter/total;
- if(s<=arc){const a=-Math.PI/2+s/radius;return{x:50+radius*Math.cos(a),y:topY+radius*Math.sin(a)}}
- s-=arc;if(s<=straight)return{x:92,y:topY+s};
- s-=straight;if(s<=arc){const a=s/radius;return{x:50+radius*Math.cos(a),y:bottomY+radius*Math.sin(a)}}
- s-=arc;return{x:8,y:bottomY-(s-straight)}
+function wheelMarkup(){
+ const w=WHEELS[type],american=type==='american';
+ const top=[w.at(-2),w.at(-1),w[0],w[1],w[2]];
+ const right=w.slice(3,17),bottom=w.slice(17,american?22:21).reverse(),left=w.slice(american?22:21,-2).reverse();
+ return `<div class="track-shell"><div class="track-top">${top.map(numberButton).join('')}</div><div class="track-body"><div class="track-side left">${left.map(numberButton).join('')}</div><div class="track-meta"><span>PISTA FÍSICA</span><b>±${neighbors}</b><small>VECINOS</small></div><div class="track-side right">${right.map(numberButton).join('')}</div></div><div class="track-bottom ${american?'five':'four'}">${bottom.map(numberButton).join('')}</div></div>`
 }
-function wheelMarkup(){const w=WHEELS[type];return `<div class="track-shell"><div class="track-outline inner"></div><div class="track-meta"><span>PISTA FÍSICA REAL</span><b>±${neighbors}</b><small>VECINOS</small></div>${w.map((n,i)=>{const p=capsulePoint(i,w.length);return `<div class="track-position" style="--x:${p.x}%;--y:${p.y/2.12}%">${numberButton(n)}</div>`}).join('')}</div>`}
 function renderTrack(){const cov=covered(),w=WHEELS[type];$('#racetrack').innerHTML=wheelMarkup();$('#racetrack').querySelectorAll('button[data-number]').forEach(b=>b.onclick=()=>toggleCenter(b.dataset.number));$('#centerCount').textContent=centers.length;$('#coveredCount').textContent=cov.size;$('#coveragePct').textContent=(cov.size/w.length*100).toFixed(1)+'%'}
 function toggleCenter(n){if(locked)return;if(centers.includes(n))centers=centers.filter(x=>x!==n);else if(centers.length<3)centers.push(n);renderTrack()}
 function demoScores(){const arr=store[type].results;if(!arr.length)return[];const w=WHEELS[type],recent=arr.slice(-25),wide=arr.slice(-100);return w.map((n,i)=>{let f=recent.filter(x=>x===n).length/(recent.length||1),g=wide.filter(x=>x===n).length/(wide.length||1);let sector=recent.reduce((s,x)=>{let j=w.indexOf(x),d=Math.min(Math.abs(i-j),w.length-Math.abs(i-j));return s+(d<=3?1:0)},0)/(recent.length||1);return{n,score:Math.round(Math.min(99,35+f*250+Math.max(0,f-g)*180+sector*45))}}).sort((a,b)=>b.score-a.score||w.indexOf(a.n)-w.indexOf(b.n)).slice(0,3)}
