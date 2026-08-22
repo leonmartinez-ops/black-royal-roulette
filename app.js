@@ -20,13 +20,16 @@ function renderAll(){
 }
 function renderNeighbors(){const el=$('#neighborOptions');el.innerHTML=[0,1,2,3,4].map(n=>`<button class="${n===neighbors?'active':''}" data-n="${n}">${n?'±'+n:'SOLO'}</button>`).join('');el.querySelectorAll('button').forEach(b=>b.onclick=()=>{if(locked)return;neighbors=+b.dataset.n;renderNeighbors();renderTrack()})}
 function numberButton(n){const cov=covered();return `<button class="number ${color(n)} ${cov.has(n)?'covered':''} ${centers.includes(n)?'center':''}" data-number="${n}"><span>${n}</span></button>`}
-function tableMarkup(){
- const zero=type==='american'?`<div class="zero-row double-zero">${numberButton('0')}${numberButton('00')}</div>`:`<div class="zero-row">${numberButton('0')}</div>`;
- let rows='';for(let r=0;r<12;r++){const start=r*3+1;rows+=`<div class="table-row">${[start,start+1,start+2].map(n=>numberButton(String(n))).join('')}</div>`}
- return `<div class="betting-board">${zero}<div class="number-table">${rows}</div><div class="columns"><span>2:1</span><span>2:1</span><span>2:1</span></div><div class="outside-bets"><span>1–12</span><span>13–24</span><span>25–36</span></div><div class="outside-bets six"><span>1–18</span><span>PAR</span><span class="bet-red">ROJO</span><span>NEGRO</span><span>IMPAR</span><span>19–36</span></div></div>`
+function capsulePoint(index,total){
+ const radius=42,topY=46,bottomY=166,straight=bottomY-topY,arc=Math.PI*radius,perimeter=arc*2+straight*2;
+ let s=index*perimeter/total;
+ if(s<=arc){const a=-Math.PI/2+s/radius;return{x:50+radius*Math.cos(a),y:topY+radius*Math.sin(a)}}
+ s-=arc;if(s<=straight)return{x:92,y:topY+s};
+ s-=straight;if(s<=arc){const a=s/radius;return{x:50+radius*Math.cos(a),y:bottomY+radius*Math.sin(a)}}
+ s-=arc;return{x:8,y:bottomY-(s-straight)}
 }
-function wheelMarkup(){const w=WHEELS[type],split=Math.ceil(w.length/2),left=w.slice(0,split),right=w.slice(split).reverse();return `<div class="track-shell"><div class="track-crown">PISTA FÍSICA</div><div class="track-lane left">${left.map(n=>numberButton(n)).join('')}</div><div class="track-center"><span>VECINOS</span><b>±${neighbors}</b><small>ORDEN REAL</small></div><div class="track-lane right">${right.map(n=>numberButton(n)).join('')}</div></div>`}
-function renderTrack(){const cov=covered(),w=WHEELS[type];$('#racetrack').innerHTML=`${wheelMarkup()}${tableMarkup()}`;$('#racetrack').querySelectorAll('button[data-number]').forEach(b=>b.onclick=()=>toggleCenter(b.dataset.number));$('#centerCount').textContent=centers.length;$('#coveredCount').textContent=cov.size;$('#coveragePct').textContent=(cov.size/w.length*100).toFixed(1)+'%'}
+function wheelMarkup(){const w=WHEELS[type];return `<div class="track-shell"><div class="track-outline inner"></div><div class="track-meta"><span>PISTA FÍSICA REAL</span><b>±${neighbors}</b><small>VECINOS</small></div>${w.map((n,i)=>{const p=capsulePoint(i,w.length);return `<div class="track-position" style="--x:${p.x}%;--y:${p.y/2.12}%">${numberButton(n)}</div>`}).join('')}</div>`}
+function renderTrack(){const cov=covered(),w=WHEELS[type];$('#racetrack').innerHTML=wheelMarkup();$('#racetrack').querySelectorAll('button[data-number]').forEach(b=>b.onclick=()=>toggleCenter(b.dataset.number));$('#centerCount').textContent=centers.length;$('#coveredCount').textContent=cov.size;$('#coveragePct').textContent=(cov.size/w.length*100).toFixed(1)+'%'}
 function toggleCenter(n){if(locked)return;if(centers.includes(n))centers=centers.filter(x=>x!==n);else if(centers.length<3)centers.push(n);renderTrack()}
 function demoScores(){const arr=store[type].results;if(!arr.length)return[];const w=WHEELS[type],recent=arr.slice(-25),wide=arr.slice(-100);return w.map((n,i)=>{let f=recent.filter(x=>x===n).length/(recent.length||1),g=wide.filter(x=>x===n).length/(wide.length||1);let sector=recent.reduce((s,x)=>{let j=w.indexOf(x),d=Math.min(Math.abs(i-j),w.length-Math.abs(i-j));return s+(d<=3?1:0)},0)/(recent.length||1);return{n,score:Math.round(Math.min(99,35+f*250+Math.max(0,f-g)*180+sector*45))}}).sort((a,b)=>b.score-a.score||w.indexOf(a.n)-w.indexOf(b.n)).slice(0,3)}
 function renderSignal(){const s=locked?locked.signal:demoScores();$('#signals').innerHTML=(s.length?s:[{n:'—'},{n:'—'},{n:'—'}]).map((x,i)=>`<div class="signal"><small>0${i+1}</small>${x.n}</div>`).join('');$('#confidence').textContent=s.length?'DEMO · NO CALIBRADA':'SIN DATOS';$('#signalNote').textContent=s.length?'Ranking provisional de interfaz; no es el BR Engine real ni una garantía.':'Importa resultados reales para activar la demostración estadística.'}
