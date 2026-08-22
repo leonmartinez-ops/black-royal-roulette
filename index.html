@@ -35,17 +35,16 @@
           <p id="signalNote">Importa resultados reales para activar la demostración estadística.</p>
         </div>
 
-        <div class="track-toolbar"><span>SELECCIONA HASTA 3 CENTROS</span><button id="clearCenters">LIMPIAR</button></div>
-        <div id="racetrack" class="roulette-layout" aria-label="Tapete y pista interactiva"></div>
-        <div class="neighbor-control">
-          <div id="neighborOptions"></div>
-        </div>
+        <div class="grid-title"><span>TOCA EL NÚMERO QUE CAYÓ</span><small>0–36</small></div>
+        <div id="racetrack" class="number-grid" aria-label="Tablero numérico interactivo"></div>
 
         <div class="result-card">
           <p class="eyebrow">NUEVO RESULTADO</p>
           <div class="result-row"><input id="resultInput" inputmode="numeric" placeholder="0–36" maxlength="2"><button id="lockBtn">REGISTRAR</button></div>
           <p id="roundStatus">El resultado se guardará y comprobará la cobertura.</p>
         </div>
+
+        <div id="marketSummary" class="market-summary"><span>— COLOR</span><span>— PARIDAD</span><span>— RANGO</span><span>— DOCENA</span><span>— COLUMNA</span></div>
 
         <div class="recent-wrap"><div class="section-title"><h2>HISTORIAL RECIENTE</h2><button data-go="history">VER TODO</button></div><div id="recentResults" class="recent"></div></div>
       </section>
@@ -74,6 +73,7 @@
     <div id="scrim" class="scrim"></div>
     <nav class="bottom-nav"><button data-view="live" class="active">◆<span>LIVE</span></button><button data-view="history">◷<span>HISTÓRICO</span></button><button data-view="stats">▥<span>ESTADÍSTICAS</span></button><button data-view="settings">⚙<span>AJUSTES</span></button></nav>
   </div>
+  <script src="dataset.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
