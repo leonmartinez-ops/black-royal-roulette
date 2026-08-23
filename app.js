@@ -15,7 +15,11 @@ if(Array.isArray(window.BR_DEMO_EUROPEAN_500)){
     store.european.results.push(...demo.slice(500));save()
   }
 }
-const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+if(Array.isArray(window.BR_SESSION_EUROPEAN_500)&&window.BR_SESSION_EUROPEAN_500.length===500&&localStorage.getItem('brr.session.id')!==window.BR_SESSION_ID){
+  store.european={results:[...window.BR_SESSION_EUROPEAN_500],rounds:[]};
+  localStorage.setItem('brr.session.id',window.BR_SESSION_ID);save()
+}
+const $=s=>document.querySelector(s),$=s=>[...document.querySelectorAll(s)];
 function color(n){return n==='0'||n==='00'?'green':RED.has(n)?'red':'black'}
 function valid(n,t=type){return WHEELS[t].includes(String(n))}
 function covered(){const w=WHEELS[type],out=new Set();centers.forEach(c=>{let i=w.indexOf(c);for(let d=-neighbors;d<=neighbors;d++)out.add(w[(i+d+w.length)%w.length])});return out}
