@@ -57,3 +57,10 @@
     height: 26px !important;
   }
 }
+
+.bulk-import{margin:3px 0;border:1px solid #40444b;background:#090b0e;color:#aeb2b8}
+.bulk-import summary{padding:8px;color:#c8ad79;font-size:7px;font-weight:700;letter-spacing:.12em;cursor:pointer}
+.bulk-import>p{margin:0 8px 6px;font-size:6px;line-height:1.4;color:#777d86}
+.bulk-import textarea{display:block;width:calc(100% - 16px);height:62px;margin:0 8px 6px;padding:8px;resize:vertical;border:1px solid #444850;background:#050607;color:#fff;font-size:16px}
+.bulk-import select{display:block;width:calc(100% - 16px);height:32px;margin:0 8px 6px;padding:0 7px;border:1px solid #444850;border-radius:0;background:#080a0c;color:#cfd1d4;font-size:8px}
+.bulk-import button{display:block;width:calc(100% - 16px);height:34px;margin:0 8px 6px;border:1px solid #dac9a4;background:linear-gradient(135deg,#ae966b,#d3bd8c);color:#090a0c;font-size:8px;font-weight:800;letter-spacing:.08em}
