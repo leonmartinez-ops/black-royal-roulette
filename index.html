@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="board.css">
   <link rel="stylesheet" href="luxe.css">
-  <link rel="stylesheet" href="iphone-fix.css?v=2">
+  <link rel="stylesheet" href="iphone-fix.css?v=3">
 </head>
 <body>
   <div id="typeGate" class="gate">
@@ -45,6 +45,18 @@
           <p id="roundStatus">El resultado se guardará y comprobará la cobertura.</p>
         </div>
 
+        <details class="bulk-import">
+          <summary>CARGAR VARIOS RESULTADOS</summary>
+          <p>Pega de 2 a 500 números separados por comas, espacios o saltos de línea.</p>
+          <textarea id="bulkResults" inputmode="text" placeholder="0, 2, 27, 36, 0, 2"></textarea>
+          <select id="bulkOrder" aria-label="Orden de los resultados">
+            <option value="oldest">EL PRIMERO ES EL MÁS ANTIGUO</option>
+            <option value="newest">EL PRIMERO ES EL MÁS RECIENTE</option>
+          </select>
+          <button id="bulkImportBtn">REEMPLAZAR HISTORIAL</button>
+          <p id="bulkStatus">La sesión activa y sus estadísticas serán sustituidas.</p>
+        </details>
+
         <div id="marketSummary" class="market-summary"><span>— COLOR</span><span>— PARIDAD</span><span>— RANGO</span><span>— DOCENA</span><span>— COLUMNA</span></div>
 
         <div class="recent-wrap"><div class="section-title"><h2>HISTORIAL RECIENTE</h2><button data-go="history">VER TODO</button></div><div id="recentResults" class="recent"></div></div>
@@ -76,6 +88,6 @@
   </div>
   <script src="dataset.js?v=520"></script>
   <script src="session-2026-08-23.js?v=3"></script>
-  <script src="app.js?v=6"></script>
+  <script src="app.js?v=7"></script>
 </body>
 </html>
