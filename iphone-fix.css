@@ -64,3 +64,12 @@
 .bulk-import textarea{display:block;width:calc(100% - 16px);height:62px;margin:0 8px 6px;padding:8px;resize:vertical;border:1px solid #444850;background:#050607;color:#fff;font-size:16px}
 .bulk-import select{display:block;width:calc(100% - 16px);height:32px;margin:0 8px 6px;padding:0 7px;border:1px solid #444850;border-radius:0;background:#080a0c;color:#cfd1d4;font-size:8px}
 .bulk-import button{display:block;width:calc(100% - 16px);height:34px;margin:0 8px 6px;border:1px solid #dac9a4;background:linear-gradient(135deg,#ae966b,#d3bd8c);color:#090a0c;font-size:8px;font-weight:800;letter-spacing:.08em}
+
+
+/* Independent table selector */
+.table-switcher{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:0 0 5px}
+.table-switcher button{min-width:0;height:32px;padding:0 6px;border:1px solid #343840;background:#080a0d;color:#858b94;display:flex;align-items:center;justify-content:center;gap:6px;overflow:hidden}
+.table-switcher button small{font-size:6px;letter-spacing:.14em;white-space:nowrap}
+.table-switcher button span{font-size:8px;letter-spacing:.05em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.table-switcher button.active{border-color:#c8ad79;color:#eee9df;background:#15130e}
+.table-switcher button.active small{color:#c8ad79}
