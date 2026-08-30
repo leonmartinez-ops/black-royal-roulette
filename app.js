@@ -4,10 +4,20 @@ const WHEELS={
 };
 const RED=new Set(['1','3','5','7','9','12','14','16','18','19','21','23','25','27','30','32','34','36']);
 const KEY='brr.phase1.v1';
+const TABLES_KEY='brr.european.tables.v1';
 let store=load(),type=null,centers=[],neighbors=3,locked=null,historyLimit=50;
+let europeanTables=null,activeEuropeanTable='main';
 function load(){try{return JSON.parse(localStorage.getItem(KEY))||base()}catch{return base()}}
 function base(){return{european:{results:[],rounds:[]},american:{results:[],rounds:[]}}}
-function save(){localStorage.setItem(KEY,JSON.stringify(store))}
+function cloneData(data){return JSON.parse(JSON.stringify(data))}
+function save(){
+ localStorage.setItem(KEY,JSON.stringify(store));
+ if(europeanTables&&europeanTables.tables?.[activeEuropeanTable]&&store.european){
+  europeanTables.tables[activeEuropeanTable].data=cloneData(store.european);
+  europeanTables.active=activeEuropeanTable;
+  localStorage.setItem(TABLES_KEY,JSON.stringify(europeanTables));
+ }
+}
 if(Array.isArray(window.BR_DEMO_EUROPEAN_500)){
   const demo=window.BR_DEMO_EUROPEAN_500;
   if(!store.european.results.length){store.european.results=[...demo];save()}
@@ -31,6 +41,37 @@ if(Array.isArray(window.BR_SESSION_EUROPEAN_500)&&localStorage.getItem('brr.sess
   };
   localStorage.setItem('brr.session.id',window.BR_SESSION_ID);save()
 }
+function sessionSeed(){
+ const baseResults=Array.isArray(window.BR_SESSION_EUROPEAN_500)?window.BR_SESSION_EUROPEAN_500:[];
+ const appended=Array.isArray(window.BR_SESSION_EUROPEAN_APPEND)?window.BR_SESSION_EUROPEAN_APPEND:[];
+ return{results:[...baseResults,...appended],rounds:[]}
+}
+function initEuropeanTables(){
+ let saved=null;try{saved=JSON.parse(localStorage.getItem(TABLES_KEY))}catch{}
+ const table2Seed={results:[...(window.BR_TABLE_2_RESULTS||[])].map(String),rounds:[]};
+ if(!saved||!saved.tables){
+  saved={active:'main',sessionId:window.BR_SESSION_ID||'main',table2Id:window.BR_TABLE_2_ID||'table2',tables:{
+   main:{label:'AGE OF THE GODS',data:cloneData(store.european)},
+   table2:{label:'ROULETTE',data:table2Seed}
+  }};
+ }else{
+  if(saved.sessionId!==(window.BR_SESSION_ID||'main')){
+   saved.tables.main={label:'AGE OF THE GODS',data:sessionSeed()};
+   saved.sessionId=window.BR_SESSION_ID||'main';
+  }
+  if(!saved.tables.main)saved.tables.main={label:'AGE OF THE GODS',data:cloneData(store.european)};
+  if(!saved.tables.table2||saved.table2Id!==(window.BR_TABLE_2_ID||'table2')){
+   saved.tables.table2={label:'ROULETTE',data:table2Seed};
+   saved.table2Id=window.BR_TABLE_2_ID||'table2';
+  }
+ }
+ europeanTables=saved;
+ activeEuropeanTable=saved.active==='table2'?'table2':'main';
+ store.european=cloneData(saved.tables[activeEuropeanTable].data);
+ localStorage.setItem(TABLES_KEY,JSON.stringify(saved));
+ localStorage.setItem(KEY,JSON.stringify(store));
+}
+initEuropeanTables();
 const $=s=>document.querySelector(s);const all=s=>[...document.querySelectorAll(s)];
 function color(n){return n==='0'||n==='00'?'green':RED.has(n)?'red':'black'}
 function valid(n,t=type){return WHEELS[t].includes(String(n))}
@@ -38,8 +79,24 @@ function covered(){const w=WHEELS[type],out=new Set();centers.forEach(c=>{let i=
 function enter(t){type=t;localStorage.setItem('brr.type',t);$('#typeGate').classList.add('hidden');$('#app').classList.remove('hidden');centers=[];locked=null;renderAll()}
 function renderAll(){
  $('#rouletteLabel').textContent=type==='american'?'AMERICANA':'EUROPEA';
+ renderTableSwitcher();
  $('#mathProbability').textContent=`1 número: ${(100/WHEELS[type].length).toFixed(2)}%`;
  renderTrack();renderHistory();renderSignal();renderStats();renderRound();
+}
+function renderTableSwitcher(){
+ const el=$('#tableSwitcher');if(!el)return;
+ el.classList.toggle('hidden',type!=='european');
+ all('[data-table]').forEach(b=>b.classList.toggle('active',b.dataset.table===activeEuropeanTable));
+ if(type==='european')$('#rouletteLabel').textContent='EUROPEA · '+(activeEuropeanTable==='main'?'MESA 1':'MESA 2');
+}
+function switchEuropeanTable(id){
+ if(type!=='european'||!europeanTables?.tables?.[id]||id===activeEuropeanTable)return;
+ europeanTables.tables[activeEuropeanTable].data=cloneData(store.european);
+ activeEuropeanTable=id;europeanTables.active=id;
+ store.european=cloneData(europeanTables.tables[id].data);
+ locked=null;centers=[];historyLimit=50;
+ $('#resultInput').value='';save();renderAll();
+ $('#roundStatus').textContent=(id==='main'?'MESA 1':'MESA 2')+' activa · historial independiente.';
 }
 function renderNeighbors(){const el=$('#neighborOptions');el.innerHTML=[0,1,2,3,4].map(n=>`<button class="${n===neighbors?'active':''}" data-n="${n}">${n?'±'+n:'SOLO'}</button>`).join('');el.querySelectorAll('button').forEach(b=>b.onclick=()=>{if(locked)return;neighbors=+b.dataset.n;renderNeighbors();renderTrack()})}
 function numberButton(n){const cov=covered();return `<button class="number ${color(n)} ${cov.has(n)?'covered':''} ${centers.includes(n)?'center':''}" data-number="${n}"><span>${n}</span></button>`}
@@ -60,5 +117,5 @@ function parseBulk(raw){return raw.split(/[\\s,;→]+/).map(v=>v.trim()).filter(
 function importBulk(){const status=$('#bulkStatus'),raw=$('#bulkResults').value,vals=parseBulk(raw);if(vals.length<2){status.textContent='Escribe al menos 2 resultados.';return}if(vals.length>500){status.textContent='Máximo 500 resultados por importación.';return}const bad=vals.filter(n=>!valid(n));if(bad.length){status.textContent='No importado. Valores inválidos: '+[...new Set(bad)].join(', ');return}if($('#bulkOrder').value==='newest')vals.reverse();if(!confirm(`Reemplazar el historial actual con ${vals.length} resultados?`))return;store[type]={results:vals,rounds:[]};localStorage.setItem('brr.session.id',window.BR_SESSION_ID||'manual');save();locked=null;centers=[];$('#bulkResults').value='';renderAll();status.textContent=`Historial reemplazado: ${vals.length} resultados · más reciente ${vals.at(-1)}.`}
 function showView(id){all('.view').forEach(v=>v.classList.toggle('active',v.id===id));all('.bottom-nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===id));closeMenu();scrollTo(0,0)}
 function closeMenu(){$('#drawer').classList.remove('open');$('#scrim').classList.remove('open')}
-all('[data-type]').forEach(b=>b.onclick=()=>enter(b.dataset.type));$('#changeTypeBtn').onclick=()=>{$('#app').classList.add('hidden');$('#typeGate').classList.remove('hidden')};$('#resultInput').addEventListener('input',e=>{const n=e.target.value.trim();if(valid(n))renderMarket(n)});$('#resultInput').addEventListener('focus',freezeRound);$('#resultInput').addEventListener('keydown',e=>{if(e.key==='Enter')lockOrRecord()});$('#lockBtn').onclick=lockOrRecord;$('#importBtn').onclick=importJSON;$('#bulkImportBtn').onclick=importBulk;$('#menuBtn').onclick=()=>{$('#drawer').classList.add('open');$('#scrim').classList.add('open')};$('#scrim').onclick=closeMenu;all('[data-view]').forEach(b=>b.onclick=()=>showView(b.dataset.view));all('[data-go]').forEach(b=>b.onclick=()=>showView(b.dataset.go));$('#exportBtn').onclick=()=>{const blob=new Blob([JSON.stringify({roulette:type,...store[type]},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`black-royal-${type}-backup.json`;a.click();URL.revokeObjectURL(a.href)};$('#resetBtn').onclick=()=>{if(confirm('¿Borrar todos los datos locales de esta ruleta?')){store[type]=base()[type];save();renderAll()}};
+all('[data-type]').forEach(b=>b.onclick=()=>enter(b.dataset.type));all('[data-table]').forEach(b=>b.onclick=()=>switchEuropeanTable(b.dataset.table));$('#changeTypeBtn').onclick=()=>{$('#app').classList.add('hidden');$('#typeGate').classList.remove('hidden')};$('#resultInput').addEventListener('input',e=>{const n=e.target.value.trim();if(valid(n))renderMarket(n)});$('#resultInput').addEventListener('focus',freezeRound);$('#resultInput').addEventListener('keydown',e=>{if(e.key==='Enter')lockOrRecord()});$('#lockBtn').onclick=lockOrRecord;$('#importBtn').onclick=importJSON;$('#bulkImportBtn').onclick=importBulk;$('#menuBtn').onclick=()=>{$('#drawer').classList.add('open');$('#scrim').classList.add('open')};$('#scrim').onclick=closeMenu;all('[data-view]').forEach(b=>b.onclick=()=>showView(b.dataset.view));all('[data-go]').forEach(b=>b.onclick=()=>showView(b.dataset.go));$('#exportBtn').onclick=()=>{const blob=new Blob([JSON.stringify({roulette:type,...store[type]},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`black-royal-${type}-backup.json`;a.click();URL.revokeObjectURL(a.href)};$('#resetBtn').onclick=()=>{if(confirm('¿Borrar todos los datos locales de esta mesa?')){store[type]=base()[type];save();renderAll()}};
 const remembered=localStorage.getItem('brr.type');if(remembered&&WHEELS[remembered])enter(remembered);
