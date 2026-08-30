@@ -15,8 +15,20 @@ if(Array.isArray(window.BR_DEMO_EUROPEAN_500)){
     store.european.results.push(...demo.slice(500));save()
   }
 }
-if(Array.isArray(window.BR_SESSION_EUROPEAN_500)&&window.BR_SESSION_EUROPEAN_500.length===500&&localStorage.getItem('brr.session.id')!==window.BR_SESSION_ID){
-  store.european={results:[...window.BR_SESSION_EUROPEAN_500],rounds:[]};
+if(Array.isArray(window.BR_SESSION_EUROPEAN_500)&&localStorage.getItem('brr.session.id')!==window.BR_SESSION_ID){
+  const baseResults=window.BR_SESSION_EUROPEAN_500;
+  const appended=Array.isArray(window.BR_SESSION_EUROPEAN_APPEND)?window.BR_SESSION_EUROPEAN_APPEND:[];
+  const current=store.european.results;
+  const hasBase=current.length>=baseResults.length&&baseResults.every((n,i)=>current[i]===n);
+  const localTail=hasBase?current.slice(baseResults.length):[];
+  let overlap=0;
+  for(let size=Math.min(localTail.length,appended.length);size>0;size--){
+    if(localTail.slice(-size).every((n,i)=>n===appended[i])){overlap=size;break}
+  }
+  store.european={
+    results:[...baseResults,...localTail,...appended.slice(overlap)],
+    rounds:hasBase?store.european.rounds:[]
+  };
   localStorage.setItem('brr.session.id',window.BR_SESSION_ID);save()
 }
 const $=s=>document.querySelector(s);const all=s=>[...document.querySelectorAll(s)];
