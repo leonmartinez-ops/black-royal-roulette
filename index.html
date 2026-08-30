@@ -30,6 +30,10 @@
 
     <main>
       <section id="live" class="view active">
+        <div id="tableSwitcher" class="table-switcher" aria-label="Seleccionar mesa">
+          <button data-table="main" class="active"><small>MESA 1</small><span>AGE OF THE GODS</span></button>
+          <button data-table="table2"><small>MESA 2</small><span>ROULETTE</span></button>
+        </div>
         <div class="signal-card">
           <div class="signal-head"><h2>BR SIGNAL</h2><span id="confidence">SIN DATOS</span></div>
           <div id="signals" class="signals"></div>
@@ -77,7 +81,7 @@
 
       <section id="backtest" class="view"><p class="eyebrow">LABORATORIO</p><h1>BACKTEST</h1><div class="empty-panel"><b>FASE 3</b><p>El motor walk-forward se habilitará después de documentar y validar el BR Engine real.</p></div></section>
       <section id="sessions" class="view"><p class="eyebrow">BASE DE DATOS</p><h1>SESIONES</h1><div class="empty-panel"><b>SESIÓN LOCAL ACTUAL</b><p>Fase 1 conserva por separado los datos europeos y americanos en este dispositivo.</p></div></section>
-      <section id="settings" class="view"><p class="eyebrow">SISTEMA</p><h1>CONFIGURACIÓN</h1><button id="exportBtn" class="gold-btn">EXPORTAR RESPALDO JSON</button><button id="resetBtn" class="danger-btn">BORRAR DATOS DE ESTA RULETA</button></section>
+      <section id="settings" class="view"><p class="eyebrow">SISTEMA</p><h1>CONFIGURACIÓN</h1><button id="exportBtn" class="gold-btn">EXPORTAR RESPALDO JSON</button><button id="resetBtn" class="danger-btn">BORRAR DATOS DE ESTA MESA</button></section>
     </main>
 
     <nav id="drawer" class="drawer">
@@ -88,6 +92,7 @@
   </div>
   <script src="dataset.js?v=520"></script>
   <script src="session-2026-08-23.js?v=6"></script>
-  <script src="app.js?v=8"></script>
+  <script src="table-2-2026-08-30.js?v=1"></script>
+  <script src="app.js?v=9"></script>
 </body>
 </html>
