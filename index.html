@@ -7,7 +7,7 @@
   <meta name="description" content="BLACK ROYAL ROULETTE — laboratorio estadístico experimental de ruleta.">
   <title>BLACK ROYAL ROULETTE</title>
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="board.css">
+  <link rel="stylesheet" href="board.css?v=2">
   <link rel="stylesheet" href="luxe.css">
   <link rel="stylesheet" href="iphone-fix.css?v=4">
 </head>
@@ -48,6 +48,29 @@
           <div class="result-row"><input id="resultInput" inputmode="numeric" placeholder="0–36" maxlength="2"><button id="lockBtn">REGISTRAR</button></div>
           <p id="roundStatus">El resultado se guardará y comprobará la cobertura.</p>
         </div>
+
+        <details class="ocr-import">
+          <summary>SUBIR CAPTURA Y CREAR HISTORIAL</summary>
+          <p>Selecciona una o varias capturas originales del panel “Últimos resultados”. La lectura se hace en tu dispositivo y podrás revisar los números antes de guardarlos.</p>
+          <label class="ocr-file">CAPTURAS
+            <input id="historyImages" type="file" accept="image/*" multiple>
+          </label>
+          <div class="ocr-actions">
+            <select id="ocrOrder" aria-label="Orden detectado">
+              <option value="newest">MÁS RECIENTE PRIMERO</option>
+              <option value="oldest">MÁS ANTIGUO PRIMERO</option>
+            </select>
+            <select id="ocrMode" aria-label="Qué hacer con el historial">
+              <option value="replace">REEMPLAZAR HISTORIAL</option>
+              <option value="append">AGREGAR AL HISTORIAL</option>
+            </select>
+          </div>
+          <button id="ocrReadBtn" type="button">LEER CAPTURAS</button>
+          <p id="ocrStatus" class="ocr-status">La app buscará únicamente números válidos de ruleta.</p>
+          <textarea id="ocrPreview" inputmode="text" placeholder="Aquí aparecerán los números detectados para que puedas revisarlos."></textarea>
+          <p id="ocrInfo" class="ocr-info">Nada se guardará hasta que confirmes.</p>
+          <button id="ocrConfirmBtn" class="hidden" type="button">CONFIRMAR Y CREAR HISTORIAL</button>
+        </details>
 
         <details class="bulk-import">
           <summary>CARGAR VARIOS RESULTADOS</summary>
@@ -94,5 +117,7 @@
   <script src="session-2026-08-23.js?v=6"></script>
   <script src="table-2-2026-08-30.js?v=2"></script>
   <script src="app.js?v=9"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js" defer></script>
+  <script src="ocr-import.js?v=1" defer></script>
 </body>
 </html>
