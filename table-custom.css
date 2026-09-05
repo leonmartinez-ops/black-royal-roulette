@@ -1,17 +1,52 @@
-/* V10 — identidad visual de las cinco mesas + edición directa + controles propios */
-.table-list{grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
-.table-slot{display:grid;grid-template-rows:44px 34px 27px;gap:4px;padding:4px;border-radius:10px;border:1px solid #30353b;background:#0d1013;transition:border-color .18s,box-shadow .18s,transform .18s}
-.table-slot .table-select{height:44px;border:0;border-radius:8px;color:#fff;padding:4px 3px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;box-shadow:inset 0 1px 0 #ffffff18}
-.table-slot .table-select b{font-size:15px;line-height:1}
-.table-slot .table-select small{font-size:6px;color:#fff;opacity:.78}
-.table-name-input{width:100%;min-width:0;height:34px;border:1px solid #3b4047;border-radius:7px;background:#080a0d;color:#f5f3ec;text-align:center;padding:4px 3px;font-size:9px;font-weight:800;outline:none;-webkit-appearance:none}
+/* V10 — mesas independientes, legibles y desplazables horizontalmente */
+.table-list{
+  display:flex !important;
+  grid-template-columns:none !important;
+  gap:10px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  padding:4px 2px 10px;
+  scroll-snap-type:x proximity;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.table-list::-webkit-scrollbar{display:none}
+.table-slot{
+  flex:0 0 152px;
+  min-width:152px;
+  scroll-snap-align:start;
+  display:grid;
+  grid-template-rows:52px 38px 32px;
+  gap:6px;
+  padding:7px;
+  border-radius:12px;
+  border:1px solid #30353b;
+  background:#0d1013;
+  transition:border-color .18s,box-shadow .18s,transform .18s;
+}
+.table-slot .table-select{
+  width:100%;height:52px;border:0;border-radius:9px;color:#fff;padding:5px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  box-shadow:inset 0 1px 0 #ffffff18;
+}
+.table-slot .table-select b{font-size:22px;line-height:1;font-weight:900}
+.table-slot .table-select small{font-size:9px;color:#fff;opacity:.82;line-height:1}
+.table-name-input{
+  width:100%;min-width:0;height:38px;border:1px solid #3b4047;border-radius:8px;
+  background:#080a0d;color:#f5f3ec;text-align:center;padding:5px 7px;
+  font-size:11px;font-weight:800;outline:none;-webkit-appearance:none;
+  overflow:hidden;text-overflow:ellipsis;
+}
 .table-name-input:focus{border-color:#f0c45b;box-shadow:0 0 0 2px #d7ab3b44;background:#11151a}
-.table-tools{display:grid;grid-template-columns:1fr 1fr;gap:3px}
-.table-tools button{height:27px;border:1px solid #3a4047;border-radius:6px;background:#14181d;color:#e9e4d8;font-size:6.5px;font-weight:900;letter-spacing:.03em;padding:0 2px;white-space:nowrap}
+.table-tools{display:grid;grid-template-columns:1.18fr .82fr;gap:6px}
+.table-tools button{
+  height:32px;border:1px solid #3a4047;border-radius:7px;background:#14181d;color:#e9e4d8;
+  font-size:8px;font-weight:900;letter-spacing:.03em;padding:0 5px;white-space:nowrap;overflow:hidden;
+}
 .table-tools .table-load{border-color:#b9913d;color:#f3cf70;background:#17140d}
 .table-tools .table-new{border-color:#6e3338;color:#ef9a9f;background:#180d0f}
 .table-tools button:active{transform:scale(.96)}
-.table-slot.active{border-color:#ffe07b;box-shadow:0 0 11px #e9b93d4d;transform:translateY(-1px)}
+.table-slot.active{border-color:#ffe07b;box-shadow:0 0 12px #e9b93d4d;transform:translateY(-1px)}
 .table-slot.active .table-name-input{border-color:#d6ad52}
 .table-tone-1 .table-select{background:linear-gradient(180deg,#9a2430,#5b121a)}
 .table-tone-2 .table-select{background:linear-gradient(180deg,#b66f28,#6a3b12)}
@@ -23,4 +58,9 @@
 .table-tone-3.active{box-shadow:0 0 12px #35b77e55}
 .table-tone-4.active{box-shadow:0 0 12px #438fe655}
 .table-tone-5.active{box-shadow:0 0 12px #986fd055}
-@media(max-width:390px){.table-slot{grid-template-rows:40px 32px 25px;padding:3px;gap:3px}.table-slot .table-select{height:40px}.table-name-input{height:32px;font-size:8px}.table-tools button{height:25px;font-size:5.8px}}
+@media(max-width:520px){
+  .table-slot{flex-basis:142px;min-width:142px;grid-template-rows:50px 36px 31px;padding:6px}
+  .table-slot .table-select{height:50px}
+  .table-name-input{height:36px;font-size:10px}
+  .table-tools button{height:31px;font-size:7.5px}
+}
